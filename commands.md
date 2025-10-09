@@ -5,5 +5,4 @@ nodemon -v
 
 npm install dotenv
 npm install express
-
-
+npm install cors
