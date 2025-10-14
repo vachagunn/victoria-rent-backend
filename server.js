@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
+
+import { initDatabase } from './database.js';
 
 // Загружает переменные из файла .env в process.env (переменные окружения).
 // Хранение конфиденциальных данных (API ключи) вне кодовой базы и использование их в приложении.
@@ -9,6 +10,9 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Инициализация базы данных
+initDatabase();
 
 // Middleware
 // cors как промежуточное ПО (для разрешения доступа со всех источников)
