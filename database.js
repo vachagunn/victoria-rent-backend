@@ -2,6 +2,8 @@ import sqlite3 from 'sqlite3';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
+import { sampleCars } from './data.js';
+
 // fileURLToPath преобразует URL-адрес файла в путь к файловой системе, например, file:///path/to/file в /path/to/file
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,6 +38,17 @@ export const initDatabase = () => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     )`);
 
+    db.run(`CREATE TABLE IF NOT EXISTS orders (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        car_id INTEGER NOT NULL,
+        car_name TEXT NOT NULL, 
+        customer_name TEXT NOT NULL,
+        customer_phone TEXT NOT NULL,
+        customer_email TEXT NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (car_id) REFERENCES cars (id)
+    )`);
+
     db.get("SELECT COUNT(*) as count FROM cars", (err, row) => {
         if (err) {
             console.error('Error checking cars count: ', err);
@@ -50,75 +63,6 @@ export const initDatabase = () => {
 
 // Insert sample car data
 const insertSampleData = () => {
-    const sampleCars = [
-        {
-            name: 'Kia Rio',
-            segment: 'эконом',
-            price: 1500,
-            image: '/images/kia-rio.jpg',
-            engine: '1.6 л',
-            transmission: 'Автомат',
-            drive: 'Передний',
-            year: 2022,
-            available: 1
-        },
-        {
-            name: 'Hyundai Solaris',
-            segment: 'эконом',
-            price: 1600,
-            image: '/images/hyundai-solaris.jpg',
-            engine: '1.6 л',
-            transmission: 'Автомат',
-            drive: 'Передний',
-            year: 2023,
-            available: 1
-        },
-        {
-            name: 'Geely Emgrand',
-            segment: 'комфорт+',
-            price: 1800,
-            image: '/images/geely-emgrand.jpg',
-            engine: '1.5 л',
-            transmission: 'Автомат',
-            drive: 'Передний',
-            year: 2023,
-            available: 1
-        },
-        {
-            name: 'VW Polo',
-            segment: 'комфорт',
-            price: 2000,
-            image: '/images/vw-polo.jpg',
-            engine: '1.6 л',
-            transmission: 'Автомат',
-            drive: 'Передний',
-            year: 2022,
-            available: 1
-        },
-        {
-            name: 'Haval Jolion',
-            segment: 'комфорт+',
-            price: 2500,
-            image: '/images/haval-jolion.jpg',
-            engine: '1.5 л',
-            transmission: 'Автомат',
-            drive: 'Передний',
-            year: 2023,
-            available: 1
-        },
-        {
-            name: 'Lada Largus',
-            segment: 'грузовой',
-            price: 1700,
-            image: '/images/lada-largus.jpg',
-            engine: '1.6 л',
-            transmission: 'Механика',
-            drive: 'Передний',
-            year: 2022,
-            available: 1
-        }
-    ];
-
     const insertCar = db.prepare(`
         INSERT INTO cars (
             name, segment, price, image, engine, transmission, drive, year, available
