@@ -4,7 +4,8 @@ import cors from 'cors';
 
 import { initDatabase } from './database.js';
 
-import router from './routes/cars.js';
+import carRoutes from './routes/cars.js';
+import orderRoutes from './routes/order.js';
 
 // Загружает переменные из файла .env в process.env (переменные окружения).
 // Хранение конфиденциальных данных (API ключи) вне кодовой базы и использование их в приложении.
@@ -24,12 +25,14 @@ app.use(cors());
 
 // Анализ парсинга входящих HTTP-запросов в формате JSON (для дальнейшей обработки сервером)
 app.use(express.json());
+app.use(express.urlencoded( {extended: true} )); // Парсинг обычных форм
 
 // Routers
-app.use('/api/cars', router);
+app.use('/api/orders', orderRoutes);
+app.use('/api/cars', carRoutes);
 
 // Запуск HTTP-сервера
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-    console.log(`API URL: http//localhost:${PORT}`);
+    console.log(`API URL: http://localhost:${PORT}`);
 });
